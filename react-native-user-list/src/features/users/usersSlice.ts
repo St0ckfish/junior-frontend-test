@@ -1,45 +1,16 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createAsyncThunk, createSelector, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
-const USERS_API_URL = 'https://jsonplaceholder.typicode.com/users';
-const USERS_CACHE_KEY = 'react-native-user-list:users';
-const PAGE_SIZE = 5;
-
-type ApiAddress = {
-  street: string;
-  city: string;
-  zipcode: string;
-};
-
-type ApiUser = {
-  id: number;
-  name: string;
-  email: string;
-  address: ApiAddress;
-};
-
-export type User = {
-  id: number;
-  name: string;
-  email: string;
-  address: string;
-};
-
-export type UsersState = {
-  items: User[];
-  isLoading: boolean;
-  isRefreshing: boolean;
-  error: string | null;
-  searchQuery: string;
-  page: number;
-  hasMore: boolean;
-  loadedFromCache: boolean;
-};
-
-type UsersRootState = {
-  users: UsersState;
-};
+import { fetchUsers } from '../../services/api';
+import { USERS_CACHE_KEY, USERS_PAGE_SIZE } from '../../utils/constants';
+import type {
+  FetchUsersPageArgs,
+  FetchUsersPageResult,
+  User,
+  UsersRootState,
+  UsersState,
+} from './usersTypes';
 
 const initialState: UsersState = {
   items: [],
@@ -51,13 +22,6 @@ const initialState: UsersState = {
   hasMore: true,
   loadedFromCache: false,
 };
-
-const transformUser = (user: ApiUser): User => ({
-  id: user.id,
-  name: user.name,
-  email: user.email,
-  address: `${user.address.street}, ${user.address.city}, ${user.address.zipcode}`,
-});
 
 const readCachedUsers = async () => {
   const cachedUsers = await AsyncStorage.getItem(USERS_CACHE_KEY);
@@ -74,23 +38,17 @@ export const hydrateUsersFromCache = createAsyncThunk('users/hydrateFromCache', 
 });
 
 export const fetchUsersPage = createAsyncThunk<
-  { users: User[]; page: number; hasMore: boolean },
-  { page?: number; refresh?: boolean },
+  FetchUsersPageResult,
+  FetchUsersPageArgs,
   { state: UsersRootState; rejectValue: string }
 >('users/fetchPage', async ({ page, refresh = false }, { getState, rejectWithValue }) => {
   const currentState = getState().users;
   const nextPage = page ?? (refresh ? 1 : currentState.page + 1);
-  const start = (nextPage - 1) * PAGE_SIZE;
+  const start = (nextPage - 1) * USERS_PAGE_SIZE;
 
   try {
-    const response = await fetch(USERS_API_URL);
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch users');
-    }
-
-    const apiUsers = (await response.json()) as ApiUser[];
-    const users = apiUsers.slice(start, start + PAGE_SIZE).map(transformUser);
+    const allUsers = await fetchUsers();
+    const users = allUsers.slice(start, start + USERS_PAGE_SIZE);
     const mergedUsers = refresh ? users : [...currentState.items, ...users];
 
     await cacheUsers(mergedUsers);
@@ -98,7 +56,7 @@ export const fetchUsersPage = createAsyncThunk<
     return {
       users,
       page: nextPage,
-      hasMore: start + PAGE_SIZE < apiUsers.length,
+      hasMore: start + USERS_PAGE_SIZE < allUsers.length,
     };
   } catch (error) {
     console.error('Unable to fetch users from JSONPlaceholder:', error);
@@ -109,7 +67,7 @@ export const fetchUsersPage = createAsyncThunk<
       if (refresh || currentState.items.length === 0) {
         return {
           users: cachedUsers,
-          page: Math.ceil(cachedUsers.length / PAGE_SIZE),
+          page: Math.ceil(cachedUsers.length / USERS_PAGE_SIZE),
           hasMore: false,
         };
       }
@@ -141,8 +99,8 @@ const usersSlice = createSlice({
         }
 
         state.items = action.payload;
-        state.page = Math.ceil(action.payload.length / PAGE_SIZE);
-        state.hasMore = action.payload.length % PAGE_SIZE === 0;
+        state.page = Math.ceil(action.payload.length / USERS_PAGE_SIZE);
+        state.hasMore = action.payload.length % USERS_PAGE_SIZE === 0;
         state.loadedFromCache = true;
       })
       .addCase(fetchUsersPage.pending, (state, action) => {
@@ -181,21 +139,3 @@ const usersSlice = createSlice({
 
 export const { setSearchQuery } = usersSlice.actions;
 export const usersReducer = usersSlice.reducer;
-
-export const selectUsersState = (state: UsersRootState) => state.users;
-
-export const selectFilteredUsers = createSelector(
-  [
-    (state: UsersRootState) => state.users.items,
-    (state: UsersRootState) => state.users.searchQuery,
-  ],
-  (users, searchQuery) => {
-    const normalizedQuery = searchQuery.trim().toLowerCase();
-
-    if (!normalizedQuery) {
-      return users;
-    }
-
-    return users.filter((user) => user.name.toLowerCase().includes(normalizedQuery));
-  },
-);
