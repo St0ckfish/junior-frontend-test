@@ -1,141 +1,203 @@
-# Frontend Developer Coding Test
+# Junior Frontend Test
 
-Welcome to the coding test for the **Full Stack Developer** role. This repository contains two challenges:
+Monorepo implementation for two frontend challenges:
 
-1. **React Task Manager** (for web development).
-2. **React Native User List** (for mobile development).
+- **React Task Manager**: web task management app with Redux, advanced filters, editing, completion state, and local persistence.
+- **React Native User List**: Expo mobile app that fetches JSONPlaceholder users, stores them in Redux, supports search, pagination, and offline cache.
 
-You are required to complete both tasks within the provided timeline. These challenges will assess your proficiency with React, React Native, Redux, and advanced development practices.
+The workspace is set up with modern tooling around Bun, TypeScript, ESLint, Prettier, Husky, Commitlint, and GitHub Actions.
 
----
+## Screenshots
 
-# ⏳ Time Limit
+### React Task Manager
 
-You have **2 days** to complete this test.
+![React Task Manager screenshot](./docs/screenshots/web-task-manager.png)
 
-### Submission Steps
+### React Native User List
 
-1. Fork this repository
-2. Complete the implementation
-3. Push your solution to your fork
-4. Email your GitHub repository link to:
+![React Native User List screenshot](./docs/screenshots/mobile-user-list.png)
 
-careers@fekracorp.com
+## Tech Stack
 
----
+- **Runtime / package manager**: Bun
+- **Web**: React, Vite, TypeScript, Redux Toolkit, React Redux, Tailwind CSS
+- **Mobile**: Expo, React Native, TypeScript, Redux Toolkit, React Redux, NativeWind, AsyncStorage
+- **Code quality**: ESLint flat config, Prettier, TypeScript strict checks
+- **Git workflow**: Husky pre-commit hooks, lint-staged, Commitlint conventional commits
+- **CI/CD**: GitHub Actions for install, lint, typecheck, build, and GitHub Pages deployment
 
 ## Repository Structure
 
-```plaintext
-react-redux-task-manager/
-|-- README.md
-|-- react-task-manager/
-|   |-- src/
-|   |   |-- components/
-|   |   |-- redux/
-|   |   |-- App.js
-|   |   |-- index.js
-|   |-- package.json
-|-- react-native-user-list/
-|   |-- src/
-|   |   |-- components/
-|   |   |-- redux/
-|   |   |-- App.js
-|   |-- package.json
-|-- .gitignore
+```text
+.
+├─ react-task-manager/
+│  ├─ src/
+│  │  ├─ app/
+│  │  ├─ components/
+│  │  ├─ features/tasks/
+│  │  ├─ hooks/
+│  │  ├─ App.tsx
+│  │  └─ main.tsx
+│  └─ package.json
+├─ react-native-user-list/
+│  ├─ assets/
+│  ├─ src/
+│  │  ├─ app/
+│  │  ├─ components/
+│  │  ├─ features/users/
+│  │  ├─ hooks/
+│  │  ├─ screens/
+│  │  ├─ services/
+│  │  └─ utils/
+│  └─ package.json
+├─ docs/screenshots/
+├─ .github/workflows/
+├─ .husky/
+├─ package.json
+└─ bun.lock
 ```
 
----
+## Installation
+
+Install all workspace dependencies from the repository root:
+
+```bash
+bun install
+```
+
+For CI or reproducible installs:
+
+```bash
+bun install --frozen-lockfile
+```
+
+`--frozen-lockfile` makes Bun use the existing `bun.lock` exactly. It fails if `package.json` and the lockfile are out of sync.
+
+## Run The Projects
+
+### React Web App
+
+```bash
+bun run dev:web
+```
+
+Default local URL:
+
+```text
+http://localhost:5173
+```
+
+If Linux shows `ENOSPC: System limit for number of file watchers reached`, raise inotify limits:
+
+```bash
+sudo sysctl -w fs.inotify.max_user_watches=524288
+sudo sysctl -w fs.inotify.max_user_instances=1024
+```
+
+### React Native App
+
+Start Expo normally:
+
+```bash
+bun run dev:mobile
+```
+
+Start with tunnel and clear Metro cache:
+
+```bash
+bun run dev:mobile:tunnel:clear
+```
+
+Then scan the QR code with Expo Go.
+
+For iPhone + Linux, use Expo Go over tunnel because iOS Simulator is only available on macOS.
+
+## Quality Checks
+
+Run all checks from the repository root:
+
+```bash
+bun run lint
+bun run typecheck
+bun run format:check
+```
+
+Format the code:
+
+```bash
+bun run format
+```
+
+Build the React web app:
+
+```bash
+bun run build:web
+```
+
+## Git Hooks And Commit Rules
+
+Husky runs quality checks before commits:
+
+- ESLint fix on staged JS/TS files
+- Prettier format on staged files
+- TypeScript checks
+
+Commit messages are validated with Commitlint and should use Conventional Commits:
+
+```text
+feat: add task filters
+fix: align expo sdk
+chore: configure ci
+```
 
 ## React Task Manager
 
-### Objective
+Implemented requirements:
 
-Build a task management application using React hooks and Redux.
+- Add tasks with `title`, `priority`, and `completed` state.
+- Edit existing tasks.
+- Delete tasks.
+- Toggle completion.
+- Filter by priority: `High`, `Medium`, `Low`.
+- Persist tasks in `localStorage`.
 
-### Requirements
+Extra polish:
 
-1. **State Management (Redux):**
-   - Use Redux for global state to manage a list of tasks (id, title, priority, completed).
-
-2. **Features:**
-   - Add, edit, delete, and toggle task completion.
-   - Filter tasks by:
-     - Priority (`High`, `Medium`, `Low`).
-   - Persist tasks in `localStorage`.
-
----
-
-### Evaluation Criteria
-
-- Correct use of React hooks and Redux.
-- Code structure and readability.
-- Full functionality with filters, persistence, and editing.
-
----
+- Search by task title.
+- Filter by status: all, active, completed.
+- Sort by newest, oldest, or priority.
+- Clear completed tasks.
+- Dashboard stats for total, pending, completed, and high-priority tasks.
+- Feature-based Redux structure with selectors, types, and storage helpers.
 
 ## React Native User List
 
-### Objective
+Implemented requirements:
 
-Build a user list application using EXPO, optimized for performance and scalability.
+- Fetch users from `https://jsonplaceholder.typicode.com/users`.
+- Store fetched users in Redux.
+- Cache users using AsyncStorage for offline support.
+- Render users with optimized `FlatList`.
+- Reusable `UserCard` component.
+- Search users by name.
+- Load more pagination.
+- Transform address to `street, city, zipcode`.
 
-### Requirements
+Extra polish:
 
-1. **State Management (Redux):**
-   - Manage user data fetched from the API.
+- Expo SDK aligned with Expo Go compatibility.
+- NativeWind/Tailwind styling.
+- Safe area support via `react-native-safe-area-context`.
+- App icons, adaptive icons, favicon, and splash screen assets.
+- Clean feature structure with API services, selectors, types, constants, and screen components.
 
-2. **API Integration:**
-   - Use `https://jsonplaceholder.typicode.com/users` to fetch user data.
-   - Store fetched users in Redux.
-   - Implement offline support: Cache the fetched data using a library like AsyncStorage.
+## CI/CD
 
-3. **FlatList Optimization:**
-   - Use FlatList to render a list of users.
+GitHub Actions validates the project on every push/pull request:
 
-4. **Features:**
-   - Display user data (`name`, `email`, `address`) in a reusable `UserCard`.
-   - Search bar to filter users by name.
-   - Pagination: Add a "Load More" button to fetch additional users.
+- Bun install with frozen lockfile
+- Lint
+- Typecheck
+- Web build
 
-5. **Data Transformation:**
-   - Combine API `address` fields into a single string (`street, city, zipcode`).
-
----
-
-### Evaluation Criteria
-
-- Efficient use of `FlatList` and performance optimization.
-- Proper Redux and API integration.
-- Clean, reusable code for components like `UserCard`.
-- Correct use of local storage
-
----
-
-## Submission Instructions
-
-1. **Clone This Repository:**  
-   Fork this repository and set up your environment.
-
-2. **Complete Both Challenges:**  
-   Implement the tasks in the respective directories:
-   - `react-task-manager/`
-   - `react-native-user-list/`
-
-3. **Test Your Work:**  
-   Ensure your projects run without errors and meet the requirements.
-
-4. **Submit Your Solution:**  
-   Push your completed code to your public GitHub repository and share the link with us.
-
----
-
-# 📤 Submission Reminder
-
-You have 2 days.
-
-Fork → Implement → Push → Send GitHub link to:
-
-careers@fekracorp.com
-
-Good luck.
+The deployment workflow is configured for GitHub Pages using GitHub Actions.
