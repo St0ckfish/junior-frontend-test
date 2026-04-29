@@ -11,6 +11,7 @@
     "dev:web": "bun run --cwd react-task-manager dev",
     "dev:mobile": "bun run --cwd react-native-user-list start",
     "dev:mobile:tunnel": "bun run --cwd react-native-user-list start:tunnel",
+    "dev:mobile:tunnel:clear": "bun run --cwd react-native-user-list start:tunnel:clear",
     "build:web": "bun run --cwd react-task-manager build",
     "lint": "bun run --cwd react-task-manager lint && bun run --cwd react-native-user-list lint",
     "typecheck": "bun run --cwd react-task-manager typecheck && bun run --cwd react-native-user-list typecheck",

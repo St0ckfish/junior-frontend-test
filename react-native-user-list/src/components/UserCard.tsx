@@ -1,4 +1,5 @@
-import { Text, View } from 'react-native';
+import { memo } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 
 type UserCardProps = {
   name: string;
@@ -6,12 +7,45 @@ type UserCardProps = {
   address: string;
 };
 
-export function UserCard({ name, email, address }: UserCardProps) {
+function UserCardComponent({ name, email, address }: UserCardProps) {
   return (
-    <View className="gap-1.5 rounded-lg border border-slate-300 bg-white p-4">
-      <Text className="text-lg font-bold text-slate-950">{name}</Text>
-      <Text className="text-sm text-blue-600">{email}</Text>
-      <Text className="text-sm text-slate-500">{address}</Text>
+    <View style={styles.card}>
+      <Text style={styles.name}>{name}</Text>
+      <Text style={styles.email}>{email}</Text>
+      <Text style={styles.address}>{address}</Text>
     </View>
   );
 }
+
+export const UserCard = memo(UserCardComponent);
+
+const styles = StyleSheet.create({
+  card: {
+    gap: 6,
+    borderColor: '#e2e8f0',
+    borderRadius: 8,
+    borderWidth: 1,
+    backgroundColor: '#ffffff',
+    padding: 16,
+    shadowColor: '#cbd5e1',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.4,
+    shadowRadius: 2,
+  },
+  name: {
+    color: '#020617',
+    fontSize: 18,
+    fontWeight: '800',
+  },
+  email: {
+    color: '#2563eb',
+    fontSize: 14,
+  },
+  address: {
+    color: '#64748b',
+    fontSize: 14,
+  },
+});

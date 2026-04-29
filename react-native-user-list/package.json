@@ -6,6 +6,7 @@
   "scripts": {
     "start": "expo start",
     "start:tunnel": "expo start --tunnel",
+    "start:tunnel:clear": "expo start --tunnel --clear",
     "start:clear": "expo start --clear",
     "android": "expo start --android",
     "ios": "expo start --ios",
@@ -17,20 +18,20 @@
     "@react-native-async-storage/async-storage": "2.2.0",
     "@reduxjs/toolkit": "^2.11.2",
     "expo": "~54.0.0",
-    "expo-status-bar": "~3.0.8",
+    "expo-status-bar": "~3.0.9",
     "nativewind": "^4.2.3",
     "react": "19.1.0",
     "react-native": "0.81.5",
     "react-native-css-interop": "^0.2.3",
     "react-native-reanimated": "~4.1.1",
-    "react-native-safe-area-context": "~5.6.0",
+    "react-native-safe-area-context": "~5.6.2",
     "react-native-worklets": "0.5.1",
     "react-redux": "^9.2.0"
   },
   "devDependencies": {
     "@babel/plugin-transform-react-jsx": "^7.28.6",
-    "@types/react": "~19.2.10",
-    "babel-preset-expo": "~54.0.0",
+    "@types/react": "~19.1.10",
+    "babel-preset-expo": "~54.0.10",
     "prettier-plugin-tailwindcss": "^0.5.11",
     "tailwindcss": "^3.4.17"
   }
