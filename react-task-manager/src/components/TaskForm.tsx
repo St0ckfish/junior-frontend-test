@@ -39,13 +39,15 @@ export function TaskForm({ editingTask, onCancelEdit, onSubmit }: TaskFormProps)
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm"
+      className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900"
     >
       <div className="flex flex-col gap-4">
         <label className="flex flex-col gap-2">
-          <span className="text-sm font-semibold text-slate-700">Task title</span>
+          <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+            Task title
+          </span>
           <input
-            className="h-11 rounded-lg border border-slate-300 px-3 text-sm text-slate-950 transition outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            className="h-11 rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-950 transition outline-none placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:ring-blue-950"
             onChange={(event) => setTitle(event.target.value)}
             placeholder="Write a clear task title"
             value={title}
@@ -53,15 +55,17 @@ export function TaskForm({ editingTask, onCancelEdit, onSubmit }: TaskFormProps)
         </label>
 
         <fieldset className="flex flex-col gap-2">
-          <legend className="text-sm font-semibold text-slate-700">Priority</legend>
+          <legend className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+            Priority
+          </legend>
           <div className="grid grid-cols-3 gap-2">
             {taskPriorities.map((taskPriority) => (
               <label
                 key={taskPriority}
                 className={`flex cursor-pointer items-center justify-center rounded-lg border px-3 py-2 text-sm font-semibold transition ${
                   priority === taskPriority
-                    ? 'border-blue-600 bg-blue-50 text-blue-700'
-                    : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'
+                    ? 'border-blue-600 bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300'
+                    : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300 dark:hover:border-slate-600'
                 }`}
               >
                 <input
@@ -86,7 +90,7 @@ export function TaskForm({ editingTask, onCancelEdit, onSubmit }: TaskFormProps)
           </button>
           {editingTask ? (
             <button
-              className="h-11 rounded-lg border border-slate-300 px-4 text-sm font-bold text-slate-700 transition hover:bg-slate-50"
+              className="h-11 rounded-lg border border-slate-300 px-4 text-sm font-bold text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
               onClick={onCancelEdit}
               type="button"
             >

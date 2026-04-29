@@ -11,3 +11,4 @@ web-build
 .env.*
 !.env.example
 bun.lockb
+.codex
