@@ -4,6 +4,7 @@ export type TaskPriority = (typeof taskPriorities)[number];
 export type PriorityFilter = TaskPriority | 'All';
 export type StatusFilter = 'All' | 'Active' | 'Completed';
 export type TaskSort = 'Newest' | 'Oldest' | 'Priority';
+export type BoardColumnId = TaskPriority | 'Done';
 
 export type Task = {
   id: string;
@@ -25,4 +26,9 @@ export type TasksState = {
 export type TaskDraft = {
   title: string;
   priority: TaskPriority;
+};
+
+export type BoardMove = {
+  columnId: BoardColumnId;
+  taskId: string;
 };

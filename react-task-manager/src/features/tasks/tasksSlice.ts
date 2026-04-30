@@ -2,7 +2,14 @@ import { createSlice, nanoid } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
 import { loadTasks } from './tasksStorage';
-import type { PriorityFilter, StatusFilter, TaskDraft, TaskSort, TasksState } from './tasksTypes';
+import type {
+  BoardMove,
+  PriorityFilter,
+  StatusFilter,
+  TaskDraft,
+  TaskSort,
+  TasksState,
+} from './tasksTypes';
 
 const initialState: TasksState = {
   items: loadTasks(),
@@ -73,6 +80,21 @@ const tasksSlice = createSlice({
     clearCompletedTasks: (state) => {
       state.items = state.items.filter((task) => !task.completed);
     },
+    moveTaskOnBoard: (state, action: PayloadAction<BoardMove>) => {
+      const task = state.items.find((item) => item.id === action.payload.taskId);
+
+      if (!task) {
+        return;
+      }
+
+      task.completed = action.payload.columnId === 'Done';
+
+      if (action.payload.columnId !== 'Done') {
+        task.priority = action.payload.columnId;
+      }
+
+      task.updatedAt = Date.now();
+    },
   },
 });
 
@@ -84,6 +106,7 @@ export const {
   setSearchQuery,
   setSortBy,
   setStatusFilter,
+  moveTaskOnBoard,
   toggleTaskCompleted,
   updateTask,
 } = tasksSlice.actions;
