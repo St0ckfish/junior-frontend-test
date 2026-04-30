@@ -29,14 +29,19 @@ function UserListFooterComponent({
       ) : (
         <Pressable
           className={`items-center rounded-lg px-4 py-3 ${
-            hasMore ? 'bg-blue-600' : 'bg-slate-300'
+            isLoading ? 'bg-transparent' : hasMore ? 'bg-blue-700' : 'bg-slate-300'
           }`}
           accessibilityRole="button"
           disabled={!hasMore || isLoading}
           onPress={onLoadMore}
         >
           {isLoading ? (
-            <ActivityIndicator color="#ffffff" />
+            <View className="flex-row items-center gap-2">
+              <ActivityIndicator color="#1d4ed8" />
+              <Text className="text-sm font-extrabold text-slate-500">
+                Loading more profiles...
+              </Text>
+            </View>
           ) : (
             <Text className="text-base font-extrabold text-white">
               {hasMore ? 'Load More' : 'All users loaded'}

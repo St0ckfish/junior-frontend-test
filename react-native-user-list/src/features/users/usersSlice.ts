@@ -26,7 +26,16 @@ const initialState: UsersState = {
 const readCachedUsers = async () => {
   const cachedUsers = await AsyncStorage.getItem(USERS_CACHE_KEY);
 
-  return cachedUsers ? (JSON.parse(cachedUsers) as User[]) : [];
+  const users = cachedUsers ? (JSON.parse(cachedUsers) as User[]) : [];
+
+  return users.map((user) => ({
+    ...user,
+    avatarUrl: user.avatarUrl ?? `https://i.pravatar.cc/160?img=${user.id + 10}`,
+    company: user.company ?? 'Unknown company',
+    phone: user.phone ?? 'Unavailable',
+    status: user.status ?? (user.id % 2 === 0 ? 'Active' : 'Offline'),
+    website: user.website ?? 'Unavailable',
+  }));
 };
 
 const cacheUsers = async (users: User[]) => {

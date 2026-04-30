@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { TextInput } from 'react-native';
+import { Text, TextInput, View } from 'react-native';
 
 type SearchBarProps = {
   value: string;
@@ -8,16 +8,19 @@ type SearchBarProps = {
 
 function SearchBarComponent({ value, onChangeText }: SearchBarProps) {
   return (
-    <TextInput
-      className="mt-4 rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 text-base text-slate-950"
-      autoCapitalize="none"
-      autoCorrect={false}
-      clearButtonMode="while-editing"
-      onChangeText={onChangeText}
-      placeholder="Search users by name"
-      placeholderTextColor="#94a3b8"
-      value={value}
-    />
+    <View className="mt-5 flex-row items-center gap-3 rounded-2xl bg-white/95 px-4 py-3 shadow-sm shadow-slate-900">
+      <Text className="text-xl text-blue-600">⌕</Text>
+      <TextInput
+        className="flex-1 text-base font-semibold text-slate-950"
+        autoCapitalize="none"
+        autoCorrect={false}
+        clearButtonMode="while-editing"
+        onChangeText={onChangeText}
+        placeholder="Search contacts"
+        placeholderTextColor="#64748b"
+        value={value}
+      />
+    </View>
   );
 }
 

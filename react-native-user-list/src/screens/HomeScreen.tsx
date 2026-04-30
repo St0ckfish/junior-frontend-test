@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { FlatList, RefreshControl, View } from 'react-native';
 import type { ListRenderItem } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -17,12 +17,14 @@ import {
 import type { User } from '../features/users/usersTypes';
 import { useAppDispatch, useAppSelector } from '../hooks/redux';
 import { USER_ROW_HEIGHT } from '../utils/constants';
+import { UserDetailsScreen } from './UserDetailsScreen';
 
 export function HomeScreen() {
   const dispatch = useAppDispatch();
   const users = useAppSelector(selectFilteredUsers);
-  const { error, hasMore, isLoading, isRefreshing, loadedFromCache, searchQuery } =
+  const { error, hasMore, isLoading, isRefreshing, items, loadedFromCache, searchQuery } =
     useAppSelector(selectUsersState);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   useEffect(() => {
     dispatch(hydrateUsersFromCache());
@@ -32,6 +34,7 @@ export function HomeScreen() {
   const handleSearchChange = useCallback(
     (query: string) => {
       dispatch(setSearchQuery(query));
+      setSelectedUser(null);
     },
     [dispatch],
   );
@@ -47,7 +50,7 @@ export function HomeScreen() {
   }, [dispatch, hasMore, isLoading, searchQuery]);
 
   const renderUser: ListRenderItem<User> = useCallback(
-    ({ item }) => <UserCard name={item.name} email={item.email} address={item.address} />,
+    ({ item }) => <UserCard user={item} onPress={setSelectedUser} />,
     [],
   );
 
@@ -64,11 +67,16 @@ export function HomeScreen() {
   const isSearchActive = searchQuery.trim().length > 0;
   const showInitialLoader = isLoading && users.length === 0;
 
+  if (selectedUser) {
+    return <UserDetailsScreen user={selectedUser} onBack={() => setSelectedUser(null)} />;
+  }
+
   return (
     <SafeAreaView className="flex-1 bg-slate-100" edges={['top']}>
       <UserListHeader
         isUsingCachedData={loadedFromCache}
         searchQuery={searchQuery}
+        totalUsers={items.length}
         onSearchChange={handleSearchChange}
       />
 
