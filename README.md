@@ -9,13 +9,21 @@ The workspace is set up with modern tooling around Bun, TypeScript, ESLint, Pret
 
 ## Screenshots
 
-### React Task Manager
+### React Task Manager - Tasks
 
 ![React Task Manager screenshot](./docs/screenshots/web-task-manager.png)
 
-### React Native User List
+### React Task Manager - Kanban Board
 
-![React Native User List screenshot](./docs/screenshots/mobile-user-list.png)
+![React Task Manager Kanban screenshot](./docs/screenshots/web-kanban-board.png)
+
+### React Native User List - Directory
+
+![React Native User Directory screenshot](./docs/screenshots/mobile-user-directory.png)
+
+### React Native User List - Details
+
+![React Native User Details screenshot](./docs/screenshots/mobile-user-details.png)
 
 ## Tech Stack
 
@@ -167,6 +175,9 @@ Extra polish:
 - Filter by status: all, active, completed.
 - Sort by newest, oldest, or priority.
 - Clear completed tasks.
+- Dark mode stored in Redux and persisted to `localStorage`.
+- Hash-based board route at `#/board`.
+- Kanban board with drag and drop between priority and completed columns.
 - Dashboard stats for total, pending, completed, and high-priority tasks.
 - Feature-based Redux structure with selectors, types, and storage helpers.
 
@@ -188,6 +199,8 @@ Extra polish:
 - Expo SDK aligned with Expo Go compatibility.
 - NativeWind/Tailwind styling.
 - Safe area support via `react-native-safe-area-context`.
+- Directory-style profile cards with avatars and status indicators.
+- User details screen with profile, contact, company, website, and address data.
 - App icons, adaptive icons, favicon, and splash screen assets.
 - Clean feature structure with API services, selectors, types, constants, and screen components.
 
